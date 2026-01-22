@@ -1,46 +1,64 @@
-export async function POST(req) {
-  const {
-    busId,
-    journeyDate,
-    seats,
-    totalAmount,
-    stripePaymentIntentId
-  } = await req.json();
+import pool from "@/app/lib/db";
+import { NextResponse } from "next/server";
+import { verifyToken, authResponse } from "@/app/lib/auth";
 
-  const client = await pool.connect();
+
+export async function POST(req) {
+  const user = await verifyToken(req);
+  if (!user) {
+    return authResponse();
+  }
+
+  const { busId, journeyDate, seats, totalAmount, stripePaymentIntentId } = await req.json();
+
+  // Validation
+  if (!busId || !journeyDate || !seats || !Array.isArray(seats) || seats.length === 0 || !totalAmount || !stripePaymentIntentId) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  for (const seat of seats) {
+    if (!seat.number || !seat.name || !seat.mobile) {
+      return NextResponse.json({ error: "Each seat must have number, name, and mobile" }, { status: 400 });
+    }
+  }
 
   try {
-    await client.query("BEGIN");
+    // Check if seats are already booked
+    const seatNumbers = seats.map(seat => seat.number);
+    const bookedSeats = await pool.query(
+      `SELECT seat_number FROM seats 
+       WHERE bus_id = $1 AND booked_date = $2 AND seat_number = ANY($3) AND status = 'booked'`,
+      [busId, journeyDate, seatNumbers]
+    );
 
-    // 1️⃣ Create booking
-    const bookingRes = await client.query(
-      `INSERT INTO bookings 
-      (user_id, bus_id, journey_date, total_seats, total_amount, payment_status, stripe_payment_intent_id)
-      VALUES ($1,$2,$3,$4,$5,'paid',$6)
-      RETURNING id`,
-      [req.user.id, busId, journeyDate, seats.length, totalAmount, stripePaymentIntentId]
+    if (bookedSeats.rows.length > 0) {
+      const bookedSeatNumbers = bookedSeats.rows.map(row => row.seat_number);
+      return NextResponse.json({ 
+        error: "Some seats are already booked", 
+        bookedSeats: bookedSeatNumbers 
+      }, { status: 409 });
+    }
+
+    // Create booking
+    const bookingRes = await pool.query(
+      `INSERT INTO bookings
+       (user_id, bus_id, journey_date, total_seats, total_amount, payment_status, stripe_payment_intent_id)
+       VALUES ($1,$2,$3,$4,$5,'paid',$6)
+       RETURNING id`,
+      [user.id, busId, journeyDate, seats.length, totalAmount, stripePaymentIntentId]
     );
 
     const bookingId = bookingRes.rows[0].id;
 
-    // 2️⃣ Insert passengers + update seats
+    // Insert passenger seats
     for (const seat of seats) {
-      await client.query(
-        `INSERT INTO booking_passengers 
-        (booking_id, seat_id, passenger_name, phone_number, insurance)
-        VALUES ($1,$2,$3,$4,$5)`,
-        [bookingId, seat.seatId, seat.name, seat.phone, seat.insurance]
-      );
-
-      await client.query(
-        `UPDATE seats 
-         SET status='booked', booking_id=$1, booked_date=$2
-         WHERE id=$3`,
-        [bookingId, journeyDate, seat.seatId]
+      await pool.query(
+        `INSERT INTO seats 
+         (bus_id, seat_number, status, passenger_name, passenger_phone, booked_date, booked_by, booking_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [busId, seat.number, "booked", seat.name, seat.mobile, journeyDate, user.id, bookingId]
       );
     }
-
-    await client.query("COMMIT");
 
     return NextResponse.json({
       message: "Booking successful",
@@ -48,9 +66,6 @@ export async function POST(req) {
     });
 
   } catch (err) {
-    await client.query("ROLLBACK");
     return NextResponse.json({ error: err.message }, { status: 500 });
-  } finally {
-    client.release();
   }
 }
