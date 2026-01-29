@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from './LoginForm.module.css';
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -22,7 +23,7 @@ export default function LoginForm() {
       
       if (res.ok) {
         localStorage.setItem('token', data.token);
-        router.push('/dashboard');
+        router.push('3s/home');
       } else {
         alert(data.error);
       }
@@ -34,15 +35,15 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-96">
-      <h2 className="text-2xl mb-6 text-center">Login</h2>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <h2 className={styles.title}>Login</h2>
       
       <input
         type="email"
         placeholder="Email"
         value={formData.email}
         onChange={(e) => setFormData({...formData, email: e.target.value})}
-        className="w-full p-3 mb-4 border rounded"
+        className={styles.input}
         required
       />
       
@@ -51,14 +52,14 @@ export default function LoginForm() {
         placeholder="Password"
         value={formData.password}
         onChange={(e) => setFormData({...formData, password: e.target.value})}
-        className="w-full p-3 mb-6 border rounded"
+        className={styles.input}
         required
       />
       
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 disabled:opacity-50"
+        className={styles.button}
       >
         {loading ? 'Logging in...' : 'Login'}
       </button>

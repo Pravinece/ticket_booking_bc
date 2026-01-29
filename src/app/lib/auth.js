@@ -1,15 +1,24 @@
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import pool from "./db";
+import { cookies } from "next/headers";
 
 export async function verifyToken(req) {
-    const authHeader = req.headers.get('authorization');
+    let token;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return null;
+    // Try to get token from Authorization header first
+    const authHeader = req.headers.get('authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+    } else {
+        // Fallback to cookie
+        const cookieStore = await cookies();
+        token = cookieStore.get('token')?.value;
     }
     
-    const token = authHeader.substring(7);
+    if (!token) {
+        return null;
+    }
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
