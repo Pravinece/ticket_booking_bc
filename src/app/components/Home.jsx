@@ -1,35 +1,31 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+
+async function searchBuses(formData) {
+  'use server'
+  
+  const source = formData.get('source');
+  const destination = formData.get('destination');
+  
+  if (!source || !destination) {
+    return;
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set('searchSource', source, { maxAge: 3600, httpOnly: true });
+  cookieStore.set('searchDestination', destination, { maxAge: 3600, httpOnly: true });
+
+  redirect(`/3s/bus`);
+}
 
 export default function Home() {
-  const [source, setSource] = useState('');
-  const [destination, setDestination] = useState('');
-  const [date, setDate] = useState('');
-  const router = useRouter();
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    
-    if (!source || !destination || !date) {
-      alert('Please fill all fields');
-      return;
-    }
-    
-    document.cookie = `searchSource=${source}; path=/; max-age=3600`;
-    document.cookie = `searchDestination=${destination}; path=/; max-age=3600`;
-    document.cookie = `searchDate=${date}; path=/; max-age=3600`;
-    
-    router.push('/3s/bus');
-  };
-
   return (
-    <div>
-      <h1>Home Page</h1>
-      <p>Welcome to the bus booking system</p>
+    <div style={{ padding: '20px' }}>
+      <h1>Search Bus Tickets</h1>
+      <p>Find and book your bus tickets</p>
 
-      <form onSubmit={handleSearch}>
-        <select name="source" id="source" value={source} onChange={(e) => setSource(e.target.value)} required>
+      <form action={searchBuses}>
+        <select name="source" required>
           <option value="">Select Source</option>
           <option value="chennai">Chennai</option>
           <option value="trichy">Trichy</option>
@@ -49,10 +45,10 @@ export default function Home() {
           <option value="palani">Palani</option>
           <option value="thirutani">Thirutani</option>
           <option value="thiruvannamalai">Thiruvannamalai</option>
-          <option value="Kodaikanal">Kodaikanal</option>
+          <option value="kodaikanal">Kodaikanal</option>
         </select>
 
-        <select name="destination" id="destination" value={destination} onChange={(e) => setDestination(e.target.value)} required>
+        <select name="destination" required>
           <option value="">Select Destination</option>
           <option value="chennai">Chennai</option>
           <option value="trichy">Trichy</option>
@@ -72,10 +68,8 @@ export default function Home() {
           <option value="palani">Palani</option>
           <option value="thirutani">Thirutani</option>
           <option value="thiruvannamalai">Thiruvannamalai</option>
-          <option value="Kodaikanal">Kodaikanal</option>
+          <option value="kodaikanal">Kodaikanal</option>
         </select>
-
-        <input type="date" name="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         
         <button type="submit">Search Buses</button>
       </form>

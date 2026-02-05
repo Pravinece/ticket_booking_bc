@@ -25,7 +25,7 @@ export async function verifyToken(req) {
         
         // Validate user exists in database
         const userResult = await pool.query(
-            `SELECT id, name, email FROM users WHERE id = $1 AND email = $2`,
+            `SELECT id, name, email, role FROM users WHERE id = $1 AND email = $2`,
             [decoded.id, decoded.email]
         );
         

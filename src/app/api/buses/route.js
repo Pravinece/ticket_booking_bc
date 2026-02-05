@@ -13,7 +13,6 @@ export async function GET(req) {
     let destination = searchParams.get("destination")
 
     try {
-        // const buses = await pool.query(`SELECT * FROM buses WHERE source = $1 destinstion = $2`,[source],[destination]);
         let query = "SELECT * FROM buses WHERE 1=1";
         const values = [];
 
@@ -44,6 +43,12 @@ export async function POST(req) {
     const user = await verifyToken(req);
     if (!user) {
         return authResponse();
+    }
+
+    if (user.role !== 'admin') {
+        return NextResponse.json({
+            message: "Only admin users can create buses",
+        }, { status: 403 })
     }
 
     try {
