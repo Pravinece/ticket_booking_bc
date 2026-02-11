@@ -7,16 +7,16 @@ export default function Layout({ children }) {
       height: '100vh'
     },
     navContainer: {
-      width: '98%',
-      height: '10%',
-      margin: '1%',
-      background: 'linear-gradient(90deg,#1a0851,#110b4d,#0368d3)',
+      width: '100%',
+      height: '7%',
+      margin: '1% 0',
+      // background: 'linear-gradient(90deg,#1a0851,#110b4d,#0368d3)',
       color: 'white'
     },
     mainContainer: {
-      width: '98%',
-      height: '86%',
-      margin: '1%',
+      width: '100%',
+      height: '89%',
+      margin: '1% 0',
       backgroundColor: '#ebf5ff',
       display: 'flex',
       justifyContent: 'center',

@@ -1,7 +1,7 @@
 import { loginUser } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
 
-export default function LoginPage({ searchParams }) {
+export default function LoginPage() {
   async function handleLogin(formData) {
     'use server'
     
@@ -18,13 +18,7 @@ export default function LoginPage({ searchParams }) {
     <div>
       <h1>Login to 3S Bus Booking</h1>
       <a href="/3s">← Back to Home</a>
-      
-      {searchParams?.error && (
-        <div style={{ color: 'red', margin: '10px 0' }}>
-          Error: {searchParams.error}
-        </div>
-      )}
-      
+            
       <form action={handleLogin}>
         <div>
           <label htmlFor="email">Email:</label>

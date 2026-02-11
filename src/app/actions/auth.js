@@ -6,7 +6,9 @@ import { redirect } from 'next/navigation';
 
 export async function loginUser(formData) {
   const email = formData.get('email');
+  console.log('email: ', email);
   const password = formData.get('password');
+  console.log('password: ', password);
 
   if (!email?.trim() || !password?.trim()) {
     return { error: "Email and password are required" };
@@ -28,13 +30,13 @@ export async function loginUser(formData) {
         role: user.rows[0].role
       },
       process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "24h" }
+      { expiresIn: "1h" }
     );
 
     cookies().set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 1 * 60 * 60 * 1000
     });
 
     return { success: true, user: { id: user.rows[0].id, name: user.rows[0].name, email: user.rows[0].email, role: user.rows[0].role } };

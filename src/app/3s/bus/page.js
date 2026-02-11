@@ -35,6 +35,7 @@ export default async function BusListPage() {
   }
 
   const buses = await getBuses({ source, destination });
+  console.log('buses: ', buses);
 
   return (
     <div style={{ padding: '20px' }}>

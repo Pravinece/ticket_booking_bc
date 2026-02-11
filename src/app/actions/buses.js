@@ -79,14 +79,28 @@ export async function getBusSeats(payload) {
     if (bus.rows.length <= 0) {
       throw new Error("No bus found");
     }
-
+    
     const seats = await pool.query(
-      "SELECT * FROM seats WHERE bus_id = $1 AND DATE(booked_date) = $2",
+      "SELECT seat_number, status FROM seats WHERE bus_id = $1 AND booked_date = $2",
       [busId, date]
     );
 
-    return { bus: bus.rows[0], seats: seats.rows };
+    const capacity = bus.rows[0].capacity;
+    const existingSeats = seats.rows;
+    const existingSeatNumbers = existingSeats.map(s => s.seat_number);
+    
+    const allSeats = Array.from({ length: capacity }, (_, i) => {
+      const seatNumber = i + 1;
+      const existingSeat = existingSeats.find(s => s.seat_number === seatNumber);
+      return {
+        seat_number: seatNumber,
+        status: existingSeat ? existingSeat.status : 'open'
+      };
+    });
+
+    return { bus: bus.rows[0], seats: allSeats };
   } catch (error) {
+    console.log('error: ', error);
     throw new Error(error.message);
   }
 }

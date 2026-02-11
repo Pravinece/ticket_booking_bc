@@ -17,7 +17,8 @@ export default async function SeatsPage() {
   }
 
   try {
-    const { bus, seats } = await getBusSeats(busId, date);
+    const { bus, seats } = await getBusSeats({busId, date});
+    console.log('bus, seats: ', bus, seats);
     
     const renderSeats = () => {
       const totalSeats = bus.capacity;
