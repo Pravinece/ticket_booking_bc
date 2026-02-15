@@ -81,20 +81,22 @@ export async function getBusSeats(payload) {
     }
     
     const seats = await pool.query(
-      "SELECT seat_number, status FROM seats WHERE bus_id = $1 AND booked_date = $2",
+      "SELECT * FROM seats WHERE bus_id = $1 AND booked_date = $2",
       [busId, date]
     );
+    console.log('seats: ', seats);
 
     const capacity = bus.rows[0].capacity;
     const existingSeats = seats.rows;
     const existingSeatNumbers = existingSeats.map(s => s.seat_number);
+    console.log('existingSeatNumbers: ', existingSeatNumbers);
     
     const allSeats = Array.from({ length: capacity }, (_, i) => {
       const seatNumber = i + 1;
-      const existingSeat = existingSeats.find(s => s.seat_number === seatNumber);
+      // const existingSeat = existingSeats.find(s => s.seat_number === seatNumber);
       return {
         seat_number: seatNumber,
-        status: existingSeat ? existingSeat.status : 'open'
+        status: existingSeatNumbers?.includes(seatNumber) ? 'booked' : 'open'
       };
     });
 

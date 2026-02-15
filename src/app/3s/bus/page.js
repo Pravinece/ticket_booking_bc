@@ -1,6 +1,7 @@
 import { getBuses } from '@/app/actions/buses';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import styles from '../bus/bus.module.css'
 //Bus List
 async function selectBus(formData) {
   'use server'
@@ -22,7 +23,9 @@ async function selectBus(formData) {
 export default async function BusListPage() {
   const cookieStore = await cookies();
   const source = cookieStore.get('searchSource')?.value;
+  console.log('source: ', source);
   const destination = cookieStore.get('searchDestination')?.value;
+  console.log('destination: ', destination);
   
   if (!source || !destination) {
     return (
@@ -38,17 +41,18 @@ export default async function BusListPage() {
   console.log('buses: ', buses);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Available Buses</h1>
-      <p>From: <strong>{source}</strong> To: <strong>{destination}</strong></p>
-      <a href="/3s">← Back to Search</a>
+    <div className={styles.busContainer}>
+      <div className={styles.backBar}>
+      <a className={styles.back} href="/3s">← Back to Search</a>
+      <p className={styles.h1}>From: <strong>{source}</strong> To: <strong>{destination}</strong></p>
+      </div >
 
       {buses.length === 0 ? (
         <p>No buses found for this route.</p>
       ) : (
-        <div>
+        <div className={styles.BusListPage}>
           {buses.map((bus) => (
-            <div key={bus.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '15px' }}>
+            <div key={bus.id} className={styles.bus}>
               <h3>{bus.bus_name}</h3>
               <p>Bus Number: {bus.bus_number}</p>
               <p>Capacity: {bus.capacity} seats</p>
@@ -62,7 +66,7 @@ export default async function BusListPage() {
                   id={`date-${bus.id}`}
                   name="date"
                   min={new Date().toISOString().split('T')[0]}
-                  required 
+                  required
                 />
                 <button type="submit">Select Seats</button>
               </form>
