@@ -1,17 +1,26 @@
 'use client'
 import React, { useState } from 'react'
+import { useSeatsSocket } from '@/app/hooks/useSeatsSocket'
 
-function SeatsClient({seats, date, bus}) {
+function SeatsClient({ busId, date }) {
+    const { bus, seats, updateSeat } = useSeatsSocket(busId, date)
     const [selected, setSelected] = useState([])
 
+    if (!bus || !seats.length) return <div>Loading seats...</div>
+
+    const handleLockSeat = () => {
+      selected.forEach(seatNumber => {
+        updateSeat(seatNumber, 'booked');
+      });
+      setSelected([]);
+    };
+
     const renderSeats = () => {
-      const totalSeats = bus.capacity;
       const seatElements = [];
 
-      for (let i = 1; i <= totalSeats; i++) {
-        const isBooked = seats.some(
-          seat => seat.seat_number === i && seat.status === 'booked'
-        );
+      for (let i = 1; i <= bus.capacity; i++) {
+        const seat = seats.find(s => s.seat_number === i);
+        const isBooked = seat?.status === 'booked';
 
         seatElements.push(
           <div
@@ -27,11 +36,12 @@ function SeatsClient({seats, date, bus}) {
               cursor: isBooked ? 'not-allowed' : 'pointer',
               backgroundColor: isBooked ? '#ff6b6b' : selected?.includes(i) ?'green':' #f8f9fa'
             }}
-            onClick={()=>{
-                      if (isBooked) return; // prevent selecting booked seat
-
-            setSelected(prev =>
-                prev.includes(i) ? prev.filter(seat => seat !== i) : [...prev, i]);}}
+            onClick={() => {
+              if (isBooked) return;
+              setSelected(prev => 
+                prev.includes(i) ? prev.filter(seat => seat !== i) : [...prev, i]
+              );
+            }}
             >
             {i}
           </div>
@@ -68,7 +78,7 @@ function SeatsClient({seats, date, bus}) {
 
         <div style={{ maxWidth: '400px', textAlign: 'center' }}>
           {renderSeats()}
-          <button onClick={() => { handleLockSeat({ seats: selected }) }}>Book Seats</button>
+          <button onClick={handleLockSeat}>Book Seats</button>
         </div>
 
         <div style={{ marginTop: '20px' }}>
