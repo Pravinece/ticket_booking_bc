@@ -1,4 +1,4 @@
-import { pool } from '@/app/lib/db'
+import pool from '@/app/lib/db'
 import { NextResponse } from "next/server";
 import { verifyToken, authResponse } from "@/app/lib/auth";
 

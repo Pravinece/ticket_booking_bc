@@ -13,7 +13,7 @@ export async function POST(req){
         }
 
         const user = await pool.query(
-            `SELECT * FROM users WHERE email = $1`, [email]
+            `SELECT * FROM users WHERE email = $1`, [email] 
         )
 
         if(user.rows.length === 0){

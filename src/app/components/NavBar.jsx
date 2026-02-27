@@ -1,18 +1,21 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import styles from '../3s/home.module.css'
 
 export default function NavBar() {
+  const pathname = usePathname()
   const [first, setFirst] = useState('home');
+  
   useEffect(() => {
-      if(window.location.pathname=='/3s'){
+      if(pathname=='/3s'){
         setFirst('home')
-      }else if(window.location.pathname == '/3s/login'){
+      }else if(pathname == '/3s/login'){
         setFirst('login')
-      }else if(window.location.pathname == '/3s/register'){
+      }else if(pathname == '/3s/register'){
         setFirst('register')
       }
-  }, [window.location.pathname])
+  }, [pathname])
   
   return (
     <nav style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>

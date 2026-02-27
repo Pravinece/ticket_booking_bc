@@ -4,6 +4,7 @@ import pool from "@/app/lib/db";
 export async function POST(req) {
     try {
         const {name, email, password} = await req.json();
+        console.log('name, email, password: ', name, email, password);
 
         if(!name?.trim() || !email?.trim() || !password?.trim() || password?.length < 8){
             return NextResponse.json({

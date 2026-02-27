@@ -23,7 +23,8 @@ export async function getBuses(payload) {
     const buses = await pool.query(query, values);
     return buses.rows;
   } catch (error) {
-    throw new Error("Failed to fetch buses");
+    console.error('getBuses error:', error);
+    throw new Error(`Failed to fetch buses: ${error.message}`);
   }
 }
 

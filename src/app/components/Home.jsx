@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
-          <img src="" alt="" />
+          <img src="/bus2.jpeg" alt="" />
       </div>
       <div className={styles.formContainer}>
         <form action={searchBuses} className={styles.form}>
