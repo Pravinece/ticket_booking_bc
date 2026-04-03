@@ -1,29 +1,178 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --main: #83d9a0;
-  --grey: #e6e6e6
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222 47% 11%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 221 83% 53%;
+  --radius: 0.75rem;
 }
 
-
-html,body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
-  font-family: hurmegeometricsans_no3_6,Gilroy,Almarai,Arial,sans-serif;
-  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+body {
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 25%, #ede9fe 50%, #fdf2f8 75%, #e0f2fe 100%);
+  background-size: 400% 400%;
+  animation: liquidBg 15s ease infinite;
+  color: hsl(var(--foreground));
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+@keyframes liquidBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Liquid blob decorations */
+.liquid-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+
+.liquid-blob-1 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.liquid-blob-2 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  bottom: -50px;
+  left: -50px;
+  animation-delay: -4s;
+}
+
+.liquid-blob-3 {
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  top: 50%;
+  left: 50%;
+  animation-delay: -2s;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* Glass morphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Liquid card hover effect */
+.liquid-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.liquid-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+/* Smooth page transitions */
+.page-enter {
+  animation: pageSlideIn 0.4s ease-out;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
 }

@@ -1,15 +1,28 @@
-import { Pool } from "pg";
+import mongoose from "mongoose";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/ticket_booking";
 
-pool.on('connect', () => {
-  console.log('Connected to PostgreSQL database');
-});
+let cached = global.mongoose;
 
-pool.on('error', (err) => {
-  console.error('Database connection error:', err);
-});
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-export default pool;
+async function connectDB() {
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      console.log("Connected to MongoDB");
+      return mongoose;
+    });
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+// Auto-connect on server startup
+connectDB();
+
+export default connectDB;

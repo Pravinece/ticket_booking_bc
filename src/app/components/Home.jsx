@@ -1,15 +1,16 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import styles from '../3s/home.module.css'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Select } from '@/components/ui/select';
+
 async function searchBuses(formData) {
   'use server'
 
   const source = formData.get('source');
   const destination = formData.get('destination');
 
-  if (!source || !destination) {
-    return;
-  }
+  if (!source || !destination) return;
 
   const cookieStore = await cookies();
   cookieStore.set('searchSource', source, { maxAge: 3600, httpOnly: true });
@@ -18,67 +19,60 @@ async function searchBuses(formData) {
   redirect(`/3s/bus`);
 }
 
-export default function Home() {
+const cities = [
+  "chennai", "trichy", "thanjavur", "ooty", "tirunelveli", "theni",
+  "coimbatore", "pattukotai", "pudhukottai", "vilupuram", "viruthachalam",
+  "salem", "sivagangai", "madurai", "tiruvarur", "palani", "thirutani",
+  "thiruvannamalai", "kodaikanal"
+];
+
+export default function HomePage() {
   return (
-    <div className={styles.container}>
-      <div className={styles.imgContainer}>
-          <img src="/bus2.jpeg" alt="" />
-      </div>
-      <div className={styles.formContainer}>
-        <form action={searchBuses} className={styles.form}>
-          <div className={styles.inputBox}>
-          <select name="source" required>
-            <option value="">Select Source</option>
-            <option value="chennai">Chennai</option>
-            <option value="trichy">Trichy</option>
-            <option value="thanjavur">Thanjavur</option>
-            <option value="ooty">Ooty</option>
-            <option value="tirunelveli">Tirunelveli</option>
-            <option value="theni">Theni</option>
-            <option value="coimbatore">Coimbatore</option>
-            <option value="pattukotai">Pattukotai</option>
-            <option value="pudhukottai">Pudhukottai</option>
-            <option value="vilupuram">Vilupuram</option>
-            <option value="viruthachalam">Viruthachalam</option>
-            <option value="salem">Salem</option>
-            <option value="sivagangai">Sivagangai</option>
-            <option value="madurai">Madurai</option>
-            <option value="tiruvarur">Tiruvarur</option>
-            <option value="palani">Palani</option>
-            <option value="thirutani">Thirutani</option>
-            <option value="thiruvannamalai">Thiruvannamalai</option>
-            <option value="kodaikanal">Kodaikanal</option>
-          </select>
+    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6">
+      <Card className="w-full max-w-lg liquid-card glass">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-xl mb-4">
+            🚌
           </div>
-          <div className={styles.inputBox}>
-          <select name="destination" required>
-            <option value="">Select Destination</option>
-            <option value="chennai">Chennai</option>
-            <option value="trichy">Trichy</option>
-            <option value="thanjavur">Thanjavur</option>
-            <option value="ooty">Ooty</option>
-            <option value="tirunelveli">Tirunelveli</option>
-            <option value="theni">Theni</option>
-            <option value="coimbatore">Coimbatore</option>
-            <option value="pattukotai">Pattukotai</option>
-            <option value="pudhukottai">Pudhukottai</option>
-            <option value="vilupuram">Vilupuram</option>
-            <option value="viruthachalam">Viruthachalam</option>
-            <option value="salem">Salem</option>
-            <option value="sivagangai">Sivagangai</option>
-            <option value="madurai">Madurai</option>
-            <option value="tiruvarur">Tiruvarur</option>
-            <option value="palani">Palani</option>
-            <option value="thirutani">Thirutani</option>
-            <option value="thiruvannamalai">Thiruvannamalai</option>
-            <option value="kodaikanal">Kodaikanal</option>
-          </select>
-          </div>
-          <div className={styles.inputBox}>
-          <button type="submit">Search Buses</button>
-          </div>
-        </form>
-      </div>
+          <CardTitle className="text-3xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Search Bus Tickets
+          </CardTitle>
+          <CardDescription className="text-base">
+            Find and book your bus tickets across Tamil Nadu
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={searchBuses} className="space-y-5">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">From</label>
+              <Select name="source" required>
+                <option value="">Select Source</option>
+                {cities.map(city => (
+                  <option key={city} value={city}>
+                    {city.charAt(0).toUpperCase() + city.slice(1)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">To</label>
+              <Select name="destination" required>
+                <option value="">Select Destination</option>
+                {cities.map(city => (
+                  <option key={city} value={city}>
+                    {city.charAt(0).toUpperCase() + city.slice(1)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            <Button type="submit" size="lg" className="w-full">
+              Search Buses
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

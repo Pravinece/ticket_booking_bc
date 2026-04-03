@@ -1,27 +1,19 @@
 'use server'
-import pool from "@/app/lib/db";
+import "@/app/lib/db";
+import Bus from "@/app/lib/models/Bus";
+import Seat from "@/app/lib/models/Seat";
 import { getCurrentUser } from './auth';
 import { redirect } from 'next/navigation';
 
 export async function getBuses(payload) {
   try {
     const { source, destination } = payload;
-    
-    let query = "SELECT * FROM buses WHERE 1=1";
-    const values = [];
+    const filter = {};
+    if (source) filter.source = source;
+    if (destination) filter.destination = destination;
 
-    if (source) {
-      values.push(source);
-      query += ` AND source = $${values.length}`;
-    }
-
-    if (destination) {
-      values.push(destination);
-      query += ` AND destination = $${values.length}`;
-    }
-
-    const buses = await pool.query(query, values);
-    return buses.rows;
+    const buses = await Bus.find(filter).lean();
+    return JSON.parse(JSON.stringify(buses));
   } catch (error) {
     console.error('getBuses error:', error);
     throw new Error(`Failed to fetch buses: ${error.message}`);
@@ -30,13 +22,8 @@ export async function getBuses(payload) {
 
 export async function createBus(formData) {
   const user = await getCurrentUser();
-  if (!user) {
-    redirect('/3s/login');
-  }
-
-  if (user.role !== 'admin') {
-    return { error: "Only admin users can create buses" };
-  }
+  if (!user) redirect('/3s/login');
+  if (user.role !== 'admin') return { error: "Only admin users can create buses" };
 
   const bus_number = formData.get('bus_number');
   const bus_name = formData.get('bus_name');
@@ -50,58 +37,36 @@ export async function createBus(formData) {
   }
 
   try {
-    const existing = await pool.query(
-      `SELECT * FROM buses WHERE bus_number = $1`, [bus_number]
-    );
+    const existing = await Bus.findOne({ bus_number });
+    if (existing) return { error: "Bus number already exists" };
 
-    if (existing.rows.length > 0) {
-      return { error: "Bus number already exists" };
-    }
-
-    const bus = await pool.query(
-      `INSERT INTO buses (bus_number, bus_name, source, destination, capacity, fare) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [bus_number, bus_name, source, destination, capacity, fare]
-    );
-
-    return { success: true, bus: bus.rows[0] };
+    const bus = await Bus.create({ bus_number, bus_name, source, destination, capacity, fare });
+    return { success: true, bus: JSON.parse(JSON.stringify(bus)) };
   } catch (error) {
     return { error: "Internal Server Error" };
   }
 }
 
 export async function getBusSeats(payload) {
-  let {busId , date} = payload;
-  if (!busId || !date) {
-    throw new Error("Bus ID and date are required");
-  }
+  let { busId, date } = payload;
+  if (!busId || !date) throw new Error("Bus ID and date are required");
 
   try {
-    const bus = await pool.query("SELECT * FROM buses WHERE id = $1", [busId]);
-    if (bus.rows.length <= 0) {
-      throw new Error("No bus found");
-    }
-    
-    const seats = await pool.query(
-      "SELECT * FROM seats WHERE bus_id = $1 AND booked_date = $2",
-      [busId, date]
-    );
-    console.log('seats: ', seats);
+    const bus = await Bus.findById(busId).lean();
+    if (!bus) throw new Error("No bus found");
 
-    const capacity = bus.rows[0].capacity;
-    const existingSeats = seats.rows;
-    const existingSeatNumbers = existingSeats.map(s => s.seat_number);
-    console.log('existingSeatNumbers: ', existingSeatNumbers);
-    
-    const allSeats = Array.from({ length: capacity }, (_, i) => {
+    const seats = await Seat.find({ bus_id: busId, booked_date: date }).lean();
+
+    const existingSeatNumbers = seats.map(s => s.seat_number);
+    const allSeats = Array.from({ length: bus.capacity }, (_, i) => {
       const seatNumber = i + 1;
-      // const existingSeat = existingSeats.find(s => s.seat_number === seatNumber);
       return {
         seat_number: seatNumber,
-        status: existingSeatNumbers?.includes(seatNumber) ? 'booked' : 'open'
+        status: existingSeatNumbers.includes(seatNumber) ? 'booked' : 'open'
       };
     });
 
-    return { bus: bus.rows[0], seats: allSeats };
+    return { bus: JSON.parse(JSON.stringify(bus)), seats: allSeats };
   } catch (error) {
     console.log('error: ', error);
     throw new Error(error.message);
