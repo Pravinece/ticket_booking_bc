@@ -1,8 +1,11 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
+import { Globe, VerifiedIcon } from 'lucide-react';
+import { Button } from 'antd';
+import { createBus } from '@/app/actions/buses';
 
 async function searchBuses(formData) {
   'use server'
@@ -19,6 +22,16 @@ async function searchBuses(formData) {
   redirect(`/3s/bus`);
 }
 
+async function handleCreateBus(formData) {
+  'use server'
+  console.log('formData: ', formData);
+  const result = await createBus(formData);
+  if (result.success) {
+    redirect('/3s/bus'); // or show success message
+  }
+  // handle error
+}
+
 const cities = [
   "chennai", "trichy", "thanjavur", "ooty", "tirunelveli", "theni",
   "coimbatore", "pattukotai", "pudhukottai", "vilupuram", "viruthachalam",
@@ -28,51 +41,78 @@ const cities = [
 
 export default function HomePage() {
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6">
-      <Card className="w-full max-w-lg liquid-card glass">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-xl mb-4">
-            🚌
+    <div className="flex flex-col items-center justify-evenly w-full h-full">
+      <div className='w-[60%] min-h-[55%] flex justify-evenly items-center'>
+        <div className='w-[50%] h-full flex flex-col justify-center p-1 gap-4'>
+          <h1 className="text-4xl font-bold text-white">Navigate the <span className='text-[#53DDFC]'>SSS</span> Void.</h1>
+          <p className='text-[14px] text-amber-50'>Experience transit reimagined. Premium seating, bio-luminescent routes, and seamless celestial connections.</p>
+          <div className='w-full h-16 flex items-center gap-4 justify-around'>
+            <div className='border-2 border-[#53DDFC] min-w-[40%] p-4 rounded-lg'>
+              <h1 className='text-[20px] text-amber-50 font-bold'>4.9k</h1>
+              <p className='text-[14px] text-amber-50'>DAILY ROUTES</p>
+            </div>
+            <div className='border-2 border-[#53DDFC] min-w-[40%] p-4 rounded-lg'>
+              <h1 className='text-[20px] text-amber-50 font-bold ' >24/7</h1>
+              <p className='text-[14px] text-amber-50'>PORTAL SUPPORT</p>
+            </div>
           </div>
-          <CardTitle className="text-3xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Search Bus Tickets
-          </CardTitle>
-          <CardDescription className="text-base">
-            Find and book your bus tickets across Tamil Nadu
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={searchBuses} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">From</label>
-              <Select name="source" required>
-                <option value="">Select Source</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>
-                    {city.charAt(0).toUpperCase() + city.slice(1)}
-                  </option>
-                ))}
-              </Select>
-            </div>
+          <div></div>
+        </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">To</label>
-              <Select name="destination" required>
-                <option value="">Select Destination</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>
-                    {city.charAt(0).toUpperCase() + city.slice(1)}
-                  </option>
-                ))}
-              </Select>
+        <div className='glass-card w-[40%] h-full backdrop-blur-lg flex items-center justify-center'>
+          <form action={searchBuses} className='w-[90%] h-[80%] flex flex-col items-center justify-evenly'>
+            <div className='text-xl font-bold text-white'> <Globe className='inline text-[#53DDFC]' /> Book Your Journey</div>
+            <div className='w-[80%]'>
+              <input type="text" name="source" placeholder="From" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' />
             </div>
-
-            <Button type="submit" size="lg" className="w-full">
-              Search Buses
-            </Button>
+            <div className='w-[80%]'>
+              <input type="text" name="destination" placeholder="To" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' />
+            </div>
+            <div className='w-[80%]'>
+              <Button htmlType="submit" className='w-full btn'>Search Buses</Button>
+            </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* <div className='glass-card w-[40%] h-full backdrop-blur-lg flex items-center justify-center'>
+          <form action={handleCreateBus} className='w-[90%] h-[90%] flex flex-col items-center justify-evenly'>
+            <div className='text-xl font-bold text-white'>Create Bus</div>
+            <div className='w-[80%]'>
+              <input type="text" name="bus_number" placeholder="Bus Number" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <input type="text" name="bus_name" placeholder="Bus Name" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <input type="text" name="source" placeholder="Source" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <input type="text" name="destination" placeholder="Destination" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <input type="number" name="capacity" placeholder="Capacity" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <input type="number" name="fare" placeholder="Fare" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
+            </div>
+            <div className='w-[80%]'>
+              <Button htmlType="submit" className='w-full btn'>Create Bus</Button>
+            </div>
+          </form>
+        </div> */}
+      </div>
+
+      <div className='w-full h-[30%] flex items-center justify-center'>
+        <div className='w-[60%] h-full flex justify-evenly'>
+          <div className='w-[55%] h-full border-2 rounded-4xl overflow-hidden'>
+            <img src="/bus1.jpeg" alt="" className='w-full h-full object-cover'/>
+          </div>
+          <div className='w-[35%] h-full bg-[#192540] border-2 border-[#53DDFC] rounded-4xl flex flex-col items-center justify-center gap-4 p-4 hover:shadow-[10px_-10px_0px_-3px_#53DDFC] transition-all duration-300'>
+            <span className='text-xl font-bold text-white'> <VerifiedIcon className='inline text-[#53DDFC]'/> A.I Optimized Seating</span>
+            <p className='text-[14px] text-amber-50'>Our quantum algorithms ensure maximum comfort based on your bio-metrics and journey duration.</p>
+          </div>  
+        </div>
+      </div>
     </div>
   );
 }

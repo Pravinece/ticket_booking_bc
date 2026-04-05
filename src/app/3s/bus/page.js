@@ -43,7 +43,7 @@ export default async function BusListPage() {
   const buses = await getBuses({ source, destination });
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <a href="/3s" className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Search</a>
@@ -56,9 +56,6 @@ export default async function BusListPage() {
             <span className="capitalize font-medium text-foreground">{destination}</span>
           </p>
         </div>
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl shadow-lg">
-          🚌
-        </div>
       </div>
 
       {buses.length === 0 ? (
@@ -66,19 +63,49 @@ export default async function BusListPage() {
           <p className="text-muted-foreground text-lg">No buses found for this route.</p>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="flex justify-between">
+          <div className='flex flex-col gap-2 w-[20%] h-[calc(100vh-220px)] p-4 rounded-lg border border-muted bg-[#ffffff]/10 backdrop-blur-sm'>
+              <div className='p-2'>
+                <h4 className='text-sm font-bold text-[#DEE5FF]'>Filter Journey</h4>
+                <p className='text-white text-[12px]'>bus Type</p>
+              </div>
+              <div className='p-2'>
+                <label className='text-white text-[12px]' htmlFor="ac_sleeper">AC sleeper</label>
+                <input type='checkbox' name='ac_sleeper' id="ac_sleeper" />
+              </div>  
+
+              <div className='p-2'>
+                <label className='text-white text-[12px]' htmlFor="non_ac_sleeper">Non-AC sleeper</label>
+                <input type='checkbox' name='non_ac_sleeper' id="non_ac_sleeper" />
+              </div>
+
+              <div className='p-2'>
+                <Button variant="outline" className="w-full btn">
+                  Apply Filters
+                </Button>
+              </div>
+
+              <div className='bg-blue-950 rounded-3xl flex flex-col justify-evenly p-2'>
+                <p className='text-[10px] text-[#53DDFC] border-[#53DDFC] border-1 p-0.5 rounded-2xl w-fit'>PRO Member</p>
+                <h4 className='text-sm font-bold text-[#DEE5FF]'>Get 15% off</h4>
+                <h6 className='text-[12px] text-amber-50'>Upgrade to Premium and save on every booking this season.</h6>
+              </div>
+
+          </div>
+
+          <div className="grid gap-4 w-[78%] h-[calc(100vh-220px)] overflow-y-auto">
           {buses.map((bus) => (
-            <Card key={bus._id} className="glass liquid-card overflow-hidden">
-              <CardContent className="p-6">
+            <div key={bus._id} className="glass-card max-h-40 overflow-hidden">
+              <div className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-1">
                     <h3 className="text-xl font-bold">{bus.bus_name}</h3>
                     <p className="text-sm text-muted-foreground">Bus No: {bus.bus_number}</p>
                     <div className="flex gap-4 mt-2">
-                      <span className="inline-flex items-center gap-1 text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-                        🪑 {bus.capacity} seats
+                      <span className="inline-flex items-center gap-1 text-sm text-[#DEE5FF] px-3 py-1 rounded-full">
+                         {bus.capacity} seats
                       </span>
-                      <span className="inline-flex items-center gap-1 text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
+                      <span className="inline-flex items-center gap-1 text-3xl text-[#53DDFC] px-3 py-1 rounded-full font-semibold">
                         ₹{bus.fare}
                       </span>
                     </div>
@@ -97,14 +124,15 @@ export default async function BusListPage() {
                         className="w-44"
                       />
                     </div>
-                    <Button type="submit">
+                    <Button type="submit" className='text-[#BA9EFF]'>
                       Select Seats
                     </Button>
                   </form>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
+          </div>
         </div>
       )}
     </div>

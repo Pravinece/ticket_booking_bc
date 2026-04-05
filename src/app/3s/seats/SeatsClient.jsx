@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { Armchair } from 'lucide-react'
 
 function SeatsClient({ bus, seats: initialSeats, busId, date }) {
     const [seats] = useState(initialSeats)
@@ -73,9 +74,9 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
     }
 
     const seatColors = {
-      booked: 'bg-red-400/80 text-white cursor-not-allowed',
-      selected: 'bg-green-500 text-white shadow-lg shadow-green-500/30 scale-105',
-      available: 'bg-white/70 hover:bg-blue-100 hover:scale-105 cursor-pointer'
+      booked: 'bg-white/10 text-white/10 cursor-not-allowed',
+      selected: 'bg-[#BA9EFF] text-white shadow-lg shadow-[#BA9EFF] scale-105',
+      available: 'border-[#53DDFC] bg-white/10 hover:bg-green-100 hover:scale-105 cursor-pointer'
     }
 
   return (
@@ -93,7 +94,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
             <Button onClick={handleDownloadTicket} size="lg" className="w-full">
               📄 Download Ticket PDF
             </Button>
-            <Button onClick={() => window.location.href = '/3s'} variant="outline" size="lg" className="w-full">
+            <Button onClick={() => window.location.href = '/3s'} variant="outline" size="lg" className="w-full text-white">
               Back to Home
             </Button>
           </div>
@@ -105,43 +106,28 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
       {/* Header */}
       <div className="mb-6">
         <a href="/3s/bus" className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Buses</a>
-        <h1 className="text-2xl font-bold mt-1 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Select Seats
+        <h1 className="text-2xl font-bold mt-1 bg-[#DEE5FF] bg-clip-text text-transparent">
+          Select Your Space
         </h1>
       </div>
 
-      {/* Bus Info */}
-      <Card className="glass liquid-card mb-6">
-        <CardContent className="p-6 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-bold">{bus.bus_name}</h2>
-            <p className="text-sm text-muted-foreground">Bus No: {bus.bus_number}</p>
-          </div>
-          <div className="flex gap-3">
-            <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">📅 {date}</span>
-            <span className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">₹{bus.fare}/seat</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: Seats */}
-        <div>
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 w-full">
+        <div className=''>
           <div className="flex flex-wrap gap-4 mb-4">
             {[
-              { color: 'bg-white/70 border', label: 'Available' },
-              { color: 'bg-green-500', label: 'Selected' },
-              { color: 'bg-red-400/80', label: 'Booked' },
+              { color: 'bg-white/10 border-1 border-[#53DDFC]', label: 'Available' },
+              { color: 'bg-[#BA9EFF] border-1 border-[#BA9EFF]', label: 'Selected' },
+              { color: 'bg-white/10 border-1 border-white/10', label: 'Booked' },
             ].map(item => (
               <div key={item.label} className="flex items-center gap-2">
                 <div className={cn("w-5 h-5 rounded-md", item.color)}></div>
-                <span className="text-sm text-muted-foreground">{item.label}</span>
+                <span className="text-[10px] text-white">{item.label}</span>
               </div>
             ))}
           </div>
 
-          <Card className="glass liquid-card p-6">
-            <div className="flex flex-wrap gap-2 justify-center">
+          <Card className="glass-card p-6">
+            <div className="flex flex-wrap gap-4 justify-center">
               {seats.map(seat => {
                 const isBooked = seat.status === 'booked'
                 const isSelected = selected.includes(seat.seat_number)
@@ -156,7 +142,8 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                       seatColors[status]
                     )}
                   >
-                    {seat.seat_number}
+                    <span className='flex flex-col items-center text-[10px]'><Armchair className='w-[18px]'/> {seat.seat_number}</span>
+                    
                   </div>
                 )
               })}
@@ -165,8 +152,8 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
         </div>
 
         {/* Right: Passenger Details */}
-        <div>
-          <h3 className="font-semibold mb-4">
+        <div className='glass-card p-4 m-2'>
+          <h3 className="font-semibold mb-4 text-[#53DDFC]">
             {selected.length > 0
               ? `Passenger Details (${selected.length} seat${selected.length > 1 ? 's' : ''})`
               : 'Select seats to continue'
@@ -178,10 +165,10 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
               <p className="text-muted-foreground">👈 Click on available seats to select them</p>
             </Card>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 h-75 overflow-y-auto">
               {passengerDetails.map((passenger, index) => (
-                <Card key={passenger.seatNumber} className="glass liquid-card">
-                  <CardContent className="p-4 space-y-3">
+                <div key={passenger.seatNumber} className=" text-[#DEE5FF]">
+                  <div className="p-4 space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="w-8 h-8 rounded-lg bg-green-500 text-white flex items-center justify-center text-sm font-bold">
                         {passenger.seatNumber}
@@ -197,6 +184,26 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                         placeholder="Passenger name"
                       />
                     </div>
+                    <div className="space-y-1 flex">
+                      <div className="flex flex-col">
+                      <Label className=''>Age</Label>
+                      <Input
+                        type="text"
+                        value={passenger.age}
+                        onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
+                        placeholder="Passenger Age"
+                      />
+                      </div>
+                      <div className="flex flex-col ml-4">
+                      <Label>Gender</Label>
+                      <Input
+                        type="text"
+                        value={passenger.gender}
+                        onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
+                        placeholder="Passenger Gender"
+                      />
+                      </div>
+                    </div>
                     <div className="space-y-1">
                       <Label>Mobile</Label>
                       <Input
@@ -206,23 +213,23 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                         placeholder="Mobile number"
                       />
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
 
               {/* Summary & Pay */}
-              <Card className="glass p-4">
+              <div className="bg-blue-950/30 rounded-3xl p-4">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Amount</p>
-                    <p className="text-2xl font-bold">₹{totalAmount}</p>
+                    <p className="text-sm text-[#DEE5FF]">Total Amount</p>
+                    <p className="text-2xl font-bold text-[#53DDFC]">₹{totalAmount}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground">{selected.length} × ₹{bus.fare}</p>
+                  <p className="text-sm text-[#DEE5FF]">{selected.length} × ₹{bus.fare}</p>
                 </div>
-                <Button onClick={handleBookAndPay} size="lg" className="w-full" disabled={processing}>
-                  {processing ? 'Processing...' : `Pay ₹${totalAmount} & Book`}
+                <Button onClick={handleBookAndPay} size="lg" className="w-full btn" disabled={processing}>
+                  {processing ? 'Processing...' : `Proceed to Pay`}
                 </Button>
-              </Card>
+              </div>
             </div>
           )}
         </div>

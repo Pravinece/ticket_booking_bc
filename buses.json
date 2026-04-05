@@ -1,0 +1,82 @@
+[
+  {
+    "bus_number": "TN01AB1001",
+    "bus_name": "Express Plus",
+    "source": "chennai",
+    "destination": "trichy",
+    "capacity": 50,
+    "fare": 450
+  },
+  {
+    "bus_number": "TN01AB1002",
+    "bus_name": "Super Deluxe",
+    "source": "chennai",
+    "destination": "coimbatore",
+    "capacity": 45,
+    "fare": 650
+  },
+  {
+    "bus_number": "TN01AB1003",
+    "bus_name": "Premium Coach",
+    "source": "trichy",
+    "destination": "madurai",
+    "capacity": 52,
+    "fare": 350
+  },
+  {
+    "bus_number": "TN01AB1004",
+    "bus_name": "Comfort Ride",
+    "source": "salem",
+    "destination": "coimbatore",
+    "capacity": 48,
+    "fare": 300
+  },
+  {
+    "bus_number": "TN01AB1005",
+    "bus_name": "Night Journey",
+    "source": "chennai",
+    "destination": "ooty",
+    "capacity": 42,
+    "fare": 750
+  },
+  {
+    "bus_number": "TN01AB1006",
+    "bus_name": "Swift Express",
+    "source": "madurai",
+    "destination": "thirutani",
+    "capacity": 50,
+    "fare": 400
+  },
+  {
+    "bus_number": "TN01AB1007",
+    "bus_name": "City Link",
+    "source": "vilupuram",
+    "destination": "thiruvannamalai",
+    "capacity": 45,
+    "fare": 280
+  },
+  {
+    "bus_number": "TN01AB1008",
+    "bus_name": "Heritage Express",
+    "source": "thanjavur",
+    "destination": "tiruvarur",
+    "capacity": 48,
+    "fare": 200
+  },
+  {
+    "bus_number": "TN01AB1009",
+    "bus_name": "Mountain View",
+    "source": "coimbatore",
+    "destination": "palani",
+    "capacity": 40,
+    "fare": 350
+  },
+  {
+    "bus_number": "TN01AB1010",
+    "bus_name": "Coastal Route",
+    "source": "tirunelveli",
+    "destination": "tiruvarur",
+    "capacity": 50,
+    "fare": 550
+  }
+]

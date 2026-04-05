@@ -12,12 +12,9 @@ export default function NavBar() {
   ]
 
   return (
-    <nav className="w-full h-14 flex items-center justify-between px-6">
+    <nav className="w-full h-full flex items-center justify-between px-6 bg-[#1E1B4B]/40">
       <a href="/3s" className="flex items-center gap-2 group">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform duration-300">
-          3S
-        </div>
-        <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-lg font-bold bg-gradient-to-r from-[#8455EF] to-[#BA9EFF] bg-clip-text text-transparent">
           Bus Booking
         </h2>
       </a>
@@ -30,7 +27,7 @@ export default function NavBar() {
               "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
               pathname === link.href
                 ? "bg-primary text-primary-foreground shadow-lg"
-                : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/50 btn"
             )}
           >
             {link.label}

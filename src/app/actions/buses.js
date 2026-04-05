@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 export async function getBuses(payload) {
   try {
     const { source, destination } = payload;
+    console.log('payload: ', payload);
     const filter = {};
     if (source) filter.source = source;
     if (destination) filter.destination = destination;
@@ -38,11 +39,13 @@ export async function createBus(formData) {
 
   try {
     const existing = await Bus.findOne({ bus_number });
+    console.log('existing: ', existing);
     if (existing) return { error: "Bus number already exists" };
 
     const bus = await Bus.create({ bus_number, bus_name, source, destination, capacity, fare });
     return { success: true, bus: JSON.parse(JSON.stringify(bus)) };
   } catch (error) {
+    console.log('error: ', error);
     return { error: "Internal Server Error" };
   }
 }
