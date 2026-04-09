@@ -17,8 +17,8 @@ export default async function LoginPage({ searchParams }) {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6">
-      <Card className="w-full max-w-md liquid-card glass">
+    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6 text-[#DEE5FF]">
+      <Card className="w-full max-w-md glass-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Welcome Back
@@ -32,7 +32,7 @@ export default async function LoginPage({ searchParams }) {
             </div>
           )}
           
-          <form action={handleLogin} className="space-y-4">
+          <form action={handleLogin} className="space-y-4 text-[#DEE5FF]">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input type="email" name="email" id="email" placeholder="Enter your email" required />
@@ -43,12 +43,12 @@ export default async function LoginPage({ searchParams }) {
               <Input type="password" name="password" id="password" placeholder="Enter your password" required />
             </div>
             
-            <Button type="submit" size="lg" className="w-full">
+            <Button type="submit" size="lg" className="w-full btn">
               Login
             </Button>
           </form>
           
-          <p className="text-center text-sm text-muted-foreground mt-4">
+          <p className="text-center text-sm text-[#DEE5FF] mt-4">
             Don't have an account?{' '}
             <a href="/3s/register" className="text-primary font-medium hover:underline">Register here</a>
           </p>

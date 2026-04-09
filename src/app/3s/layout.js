@@ -11,7 +11,7 @@ export default function Layout({ children }) {
         <div className="w-full h-16 backdrop-blur-md bg-[#53DDFC]/20">
           <NavBar />
         </div>
-        <div className="w-[100%] h-[calc(100%-4rem)] overflow-hidden backdrop-blur-xl z-10">
+        <div className="w-[100%] h-[calc(100%-4rem)] overflow-hidden backdrop-blur-sm z-10">
           <div className="w-full h-full">
             {children}
           </div>

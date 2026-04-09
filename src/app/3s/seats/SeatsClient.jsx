@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Armchair } from 'lucide-react'
+import ObjectLoader from './ObjectLoader'
 
 function SeatsClient({ bus, seats: initialSeats, busId, date }) {
     const [seats] = useState(initialSeats)
@@ -15,6 +16,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
     const [passengerDetails, setPassengerDetails] = useState([])
     const [bookingStatus, setBookingStatus] = useState(null)
     const [processing, setProcessing] = useState(false)
+    const [viewBus, setViewBus] = useState(false)
 
     const totalAmount = selected.length * bus.fare
 
@@ -29,7 +31,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
 
         const newDetails = newSelected.map(num => {
           const existing = passengerDetails.find(p => p.seatNumber === num)
-          return existing || { seatNumber: num, name: '', mobile: '' }
+          return existing || { seatNumber: num, name: '', age: '', gender: '', mobile: '' }
         })
         setPassengerDetails(newDetails)
         return newSelected
@@ -42,7 +44,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
 
     const handleBookAndPay = async () => {
       if (selected.length === 0) { alert('Please select at least one seat'); return }
-      const isValid = passengerDetails.every(p => p.name.trim() && p.mobile.trim())
+      const isValid = passengerDetails.every(p => p.name.trim() && p.age && p.gender && p.mobile.trim())
       if (!isValid) { alert('Please fill all passenger details'); return }
 
       setProcessing(true)
@@ -50,7 +52,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
       try {
         const result = await createBooking({
           busId, journeyDate: date,
-          seats: passengerDetails.map(p => ({ number: p.seatNumber, name: p.name, mobile: p.mobile })),
+          seats: passengerDetails.map(p => ({ number: p.seatNumber, name: p.name, age: p.age, gender: p.gender, mobile: p.mobile })),
           totalAmount
         })
 
@@ -94,7 +96,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
             <Button onClick={handleDownloadTicket} size="lg" className="w-full">
               📄 Download Ticket PDF
             </Button>
-            <Button onClick={() => window.location.href = '/3s'} variant="outline" size="lg" className="w-full text-white">
+            <Button onClick={() => window.location.href = '/3s'} variant="outline" size="lg" className="w-full text-[#DEE5FF]">
               Back to Home
             </Button>
           </div>
@@ -102,13 +104,18 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
       </div>
     )}
 
-    <div className="max-w-5xl mx-auto p-6">
+    {!viewBus ? <div className="max-w-5xl mx-auto p-6">
       {/* Header */}
-      <div className="mb-6">
-        <a href="/3s/bus" className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Buses</a>
+      <div className="mb-6 flex">
+        <div className='flex flex-col gap-1'>
+        <a href="/3s/bus" className="text-sm text-[#DEE5FF] hover:text-white transition-colors ">← Back to Buses</a>
         <h1 className="text-2xl font-bold mt-1 bg-[#DEE5FF] bg-clip-text text-transparent">
           Select Your Space
         </h1>
+        </div>
+        <div className='ml-auto'>
+          <Button className="btn" onClick={()=>{setViewBus(true)}}>View Bus Seats</Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 w-full">
@@ -152,7 +159,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
         </div>
 
         {/* Right: Passenger Details */}
-        <div className='glass-card p-4 m-2'>
+        <div className=' p-4 m-2'>
           <h3 className="font-semibold mb-4 text-[#53DDFC]">
             {selected.length > 0
               ? `Passenger Details (${selected.length} seat${selected.length > 1 ? 's' : ''})`
@@ -165,7 +172,8 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
               <p className="text-muted-foreground">👈 Click on available seats to select them</p>
             </Card>
           ) : (
-            <div className="space-y-4 h-75 overflow-y-auto">
+            <div className="space-y-4 h-full flex flex-col justify-evenly">
+            <div className=" glass-card space-y-4 h-85 overflow-y-auto">
               {passengerDetails.map((passenger, index) => (
                 <div key={passenger.seatNumber} className=" text-[#DEE5FF]">
                   <div className="p-4 space-y-3">
@@ -184,24 +192,31 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                         placeholder="Passenger name"
                       />
                     </div>
-                    <div className="space-y-1 flex">
-                      <div className="flex flex-col">
-                      <Label className=''>Age</Label>
-                      <Input
-                        type="text"
-                        value={passenger.age}
-                        onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
-                        placeholder="Passenger Age"
-                      />
+                    <div className="flex gap-4">
+                      <div className="flex flex-col space-y-1 w-1/3">
+                        <Label>Age</Label>
+                        <Input
+                          type="number"
+                          value={passenger.age}
+                          onChange={(e) => handlePassengerChange(index, 'age', e.target.value)}
+                          placeholder="Age"
+                        />
                       </div>
-                      <div className="flex flex-col ml-4">
-                      <Label>Gender</Label>
-                      <Input
-                        type="text"
-                        value={passenger.gender}
-                        onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
-                        placeholder="Passenger Gender"
-                      />
+                      <div className="flex flex-col space-y-1 w-2/3">
+                        <Label>Gender</Label>
+                        <div className="flex items-center gap-4 h-9">
+                          {['Male', 'Female', 'Other'].map((g) => (
+                            <label key={g} className="flex items-center gap-1.5 cursor-pointer text-[12px] text-white">
+                              <span
+                                onClick={() => handlePassengerChange(index, 'gender', g)}
+                                className={`w-4 h-4 rounded-full border-2 border-[#53DDFC] flex items-center justify-center transition-all duration-200`}
+                              >
+                                {passenger.gender === g && <span className="w-2 h-2 rounded-full bg-[#53DDFC]" />}
+                              </span>
+                              {g}
+                            </label>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="space-y-1">
@@ -231,10 +246,15 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                 </Button>
               </div>
             </div>
+
+            <div className="text-center text-sm text-[#DEE5FF] mt-4 w-full h-28 flex items-center justify-center border border-[#DEE5FF]/20 rounded-lg overflow-hidden">
+              <img src="/bus1.jpeg" alt="" className='w-full h-full object-cover'/>
+            </div>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </div> : <ObjectLoader seats={seats}/>}
     </>
   )
 }

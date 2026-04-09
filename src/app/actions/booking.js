@@ -16,8 +16,8 @@ export async function createBooking(bookingData) {
   }
 
   for (const seat of seats) {
-    if (!seat.number || !seat.name || !seat.mobile) {
-      return { error: "Each seat must have number, name, and mobile" };
+    if (!seat.number || !seat.name || !seat.mobile || !seat.age || !seat.gender) {
+      return { error: "Each seat must have number, name, age, gender, and mobile" };
     }
   }
 
@@ -52,6 +52,8 @@ export async function createBooking(bookingData) {
         seat_number: seat.number,
         status: "booked",
         passenger_name: seat.name,
+        passenger_age: seat.age,
+        passenger_gender: seat.gender,
         passenger_phone: seat.mobile,
         booked_date: journeyDate,
         booked_by: user.id,

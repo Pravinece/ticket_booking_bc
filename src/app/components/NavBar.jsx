@@ -12,7 +12,7 @@ export default function NavBar() {
   ]
 
   return (
-    <nav className="w-full h-full flex items-center justify-between px-6 bg-[#1E1B4B]/40">
+    <nav className="w-full h-full flex items-center justify-between px-6 ">
       <a href="/3s" className="flex items-center gap-2 group">
         <h2 className="text-lg font-bold bg-gradient-to-r from-[#8455EF] to-[#BA9EFF] bg-clip-text text-transparent">
           Bus Booking
@@ -27,7 +27,7 @@ export default function NavBar() {
               "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
               pathname === link.href
                 ? "bg-primary text-primary-foreground shadow-lg"
-                : "text-muted-foreground hover:text-foreground hover:bg-white/50 btn"
+                : "text-white/40 hover:text-white hover:bg-white/50 btn"
             )}
           >
             {link.label}

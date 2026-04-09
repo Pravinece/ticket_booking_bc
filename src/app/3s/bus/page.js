@@ -3,8 +3,9 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import DateInput from '@/app/components/DateInput';
 import { Label } from '@/components/ui/label';
+import ToggleSwitch from '@/app/components/ToggleSwitch';
 
 async function selectBus(formData) {
   'use server'
@@ -46,37 +47,35 @@ export default async function BusListPage() {
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <a href="/3s" className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Search</a>
+          <a href="/3s" className="text-sm text-[#DEE5FF] hover:text-white transition-colors">← Back to Search</a>
           <h1 className="text-2xl font-bold mt-1 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Available Buses
           </h1>
-          <p className="text-muted-foreground mt-1">
-            <span className="capitalize font-medium text-foreground">{source}</span>
+          <p className="text-[#DEE5FF] mt-1 ">
+            <span className="capitalize font-medium text-green-200">{source}</span>
             {' → '}
-            <span className="capitalize font-medium text-foreground">{destination}</span>
+            <span className="capitalize font-medium text-orange-200">{destination}</span>
           </p>
         </div>
       </div>
 
       {buses.length === 0 ? (
         <Card className="glass liquid-card p-8 text-center">
-          <p className="text-muted-foreground text-lg">No buses found for this route.</p>
+          <p className="text-[#DEE5FF] text-lg">No buses found for this route.</p>
         </Card>
       ) : (
         <div className="flex justify-between">
-          <div className='flex flex-col gap-2 w-[20%] h-[calc(100vh-220px)] p-4 rounded-lg border border-muted bg-[#ffffff]/10 backdrop-blur-sm'>
+          <div className='flex flex-col gap-2 w-[20%] max-h-[calc(100vh-220px)] h-fit p-4 glass-card rounded-3xl'>
               <div className='p-2'>
                 <h4 className='text-sm font-bold text-[#DEE5FF]'>Filter Journey</h4>
                 <p className='text-white text-[12px]'>bus Type</p>
               </div>
               <div className='p-2'>
-                <label className='text-white text-[12px]' htmlFor="ac_sleeper">AC sleeper</label>
-                <input type='checkbox' name='ac_sleeper' id="ac_sleeper" />
+                <ToggleSwitch name="ac_sleeper" label="AC sleeper" />
               </div>  
 
               <div className='p-2'>
-                <label className='text-white text-[12px]' htmlFor="non_ac_sleeper">Non-AC sleeper</label>
-                <input type='checkbox' name='non_ac_sleeper' id="non_ac_sleeper" />
+                <ToggleSwitch name="non_ac_sleeper" label="Non-AC sleeper" />
               </div>
 
               <div className='p-2'>
@@ -99,8 +98,8 @@ export default async function BusListPage() {
               <div className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-1">
-                    <h3 className="text-xl font-bold">{bus.bus_name}</h3>
-                    <p className="text-sm text-muted-foreground">Bus No: {bus.bus_number}</p>
+                    <h3 className="text-xl font-bold text-[#DEE5FF]">{bus.bus_name}</h3>
+                    <p className="text-sm text-[#DEE5FF]">Bus No: {bus.bus_number}</p>
                     <div className="flex gap-4 mt-2">
                       <span className="inline-flex items-center gap-1 text-sm text-[#DEE5FF] px-3 py-1 rounded-full">
                          {bus.capacity} seats
@@ -113,18 +112,17 @@ export default async function BusListPage() {
                   
                   <form action={selectBus} className="flex items-end gap-3">
                     <input type="hidden" name="busId" value={bus._id} />
-                    <div className="space-y-1">
+                    <div className="space-y-1 text-[#DEE5FF]">
                       <Label htmlFor={`date-${bus._id}`}>Journey Date</Label>
-                      <Input
-                        type="date"
+                      <DateInput
                         id={`date-${bus._id}`}
                         name="date"
                         min={new Date().toISOString().split('T')[0]}
                         required
-                        className="w-44"
+                        className="w-44 text-[#DEE5FF]"
                       />
                     </div>
-                    <Button type="submit" className='text-[#BA9EFF]'>
+                    <Button type="submit" className='text-[#DEE5FF] btn'>
                       Select Seats
                     </Button>
                   </form>

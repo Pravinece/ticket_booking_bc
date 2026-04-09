@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/select';
 import { Globe, VerifiedIcon } from 'lucide-react';
 import { Button } from 'antd';
 import { createBus } from '@/app/actions/buses';
+import SearchableSelect from './SearchableSelect';
 
 async function searchBuses(formData) {
   'use server'
@@ -63,43 +64,16 @@ export default function HomePage() {
           <form action={searchBuses} className='w-[90%] h-[80%] flex flex-col items-center justify-evenly'>
             <div className='text-xl font-bold text-white'> <Globe className='inline text-[#53DDFC]' /> Book Your Journey</div>
             <div className='w-[80%]'>
-              <input type="text" name="source" placeholder="From" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' />
+              <SearchableSelect name="source" placeholder="From" options={cities} />
             </div>
             <div className='w-[80%]'>
-              <input type="text" name="destination" placeholder="To" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' />
+              <SearchableSelect name="destination" placeholder="To" options={cities} />
             </div>
             <div className='w-[80%]'>
               <Button htmlType="submit" className='w-full btn'>Search Buses</Button>
             </div>
           </form>
         </div>
-
-        {/* <div className='glass-card w-[40%] h-full backdrop-blur-lg flex items-center justify-center'>
-          <form action={handleCreateBus} className='w-[90%] h-[90%] flex flex-col items-center justify-evenly'>
-            <div className='text-xl font-bold text-white'>Create Bus</div>
-            <div className='w-[80%]'>
-              <input type="text" name="bus_number" placeholder="Bus Number" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <input type="text" name="bus_name" placeholder="Bus Name" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <input type="text" name="source" placeholder="Source" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <input type="text" name="destination" placeholder="Destination" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <input type="number" name="capacity" placeholder="Capacity" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <input type="number" name="fare" placeholder="Fare" className='w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4' required />
-            </div>
-            <div className='w-[80%]'>
-              <Button htmlType="submit" className='w-full btn'>Create Bus</Button>
-            </div>
-          </form>
-        </div> */}
       </div>
 
       <div className='w-full h-[30%] flex items-center justify-center'>

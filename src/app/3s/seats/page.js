@@ -25,7 +25,7 @@ export default async function SeatsPage() {
 
   try {
     const { bus, seats } = await getBusSeats({ busId, date });
-    return <SeatsClient bus={bus} seats={seats} busId={busId} date={date} />;
+    return <SeatsClient bus={bus} seats={seats} busId={busId} date={date} />
   } catch (error) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6">

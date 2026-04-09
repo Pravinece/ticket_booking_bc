@@ -17,8 +17,8 @@ export default async function RegisterPage({ searchParams }) {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6">
-      <Card className="w-full max-w-md liquid-card glass">
+    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] p-6 text-[#DEE5FF]">
+      <Card className="w-full max-w-md glass-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Create Account
@@ -62,7 +62,7 @@ export default async function RegisterPage({ searchParams }) {
               </Select>
             </div>
             
-            <Button type="submit" size="lg" className="w-full">
+            <Button type="submit" size="lg" className="w-full btn">
               Register
             </Button>
           </form>
