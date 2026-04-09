@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 export async function POST(req){
     try {
         const {email, password} = await req.json();
+        console.log('password: ', password);
+        console.log('email: ', email);
 
         if(!email?.trim() || !password?.trim()){
             return NextResponse.json({
@@ -13,7 +15,7 @@ export async function POST(req){
         }
 
         const user = await pool.query(
-            `SELECT * FROM users WHERE email = $1`, [email]
+            `SELECT * FROM users WHERE email = $1`, [email] 
         )
 
         if(user.rows.length === 0){
@@ -31,7 +33,8 @@ export async function POST(req){
         const token = jwt.sign(
             { 
                 id: user.rows[0].id, 
-                email: user.rows[0].email 
+                email: user.rows[0].email,
+                role: user.rows[0].role
             },
             process.env.JWT_SECRET || "your-secret-key",
             { expiresIn: "24h" }
@@ -43,10 +46,12 @@ export async function POST(req){
             user: {
                 id: user.rows[0].id,
                 name: user.rows[0].name,
-                email: user.rows[0].email
+                email: user.rows[0].email,
+                role: user.rows[0].role
             }
         })
     } catch (error) {
+        console.log('error: ', error);
         return NextResponse.json({
             message: "Internal Server Error",
             error: error.message
