@@ -35,7 +35,7 @@ export async function loginUser(formData) {
 
     return { success: true, user: { id: user._id.toString(), name: user.name, email: user.email, role: user.role } };
   } catch (error) {
-    return { error: "Internal Server Error" };
+    return { error: error.message || "Internal Server Error" };
   }
 }
 

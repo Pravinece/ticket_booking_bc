@@ -28,7 +28,7 @@ function TargetFollower({ controlsRef }) {
   return null
 }
 
-function ObjectLoader({seats}) {
+function ObjectLoader({seats, setViewBus}) {
   const [selectedSeat, setSelectedSeat] = useState(0)
   const [savedPositions, setSavedPositions] = useState({})
   const controlsRef = useRef()
@@ -44,6 +44,9 @@ function ObjectLoader({seats}) {
   return (
     <>
       {/* Canvas */}
+      <div className="max-w-5xl mx-auto p-2 cursor-pointer">
+      <div className="text-sm text-[#DEE5FF] hover:text-white transition-colors " onClick={()=>{setViewBus()}}>← Back to Buses</div>
+      </div>
       <div className="max-w-5xl mx-auto p-6 glass-card h-130">
         <Canvas>
           <OrbitControls

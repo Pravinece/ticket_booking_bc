@@ -1,10 +1,14 @@
 'use client'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 export default function NavBar() {
   const pathname = usePathname()
+  let auth = document.cookie.split('; ').find(row => row.startsWith('auth'))
 
+  if(!auth){
+    redirect('/3s/login')
+  }
   const links = [
     { href: '/3s', label: 'Home' },
     { href: '/3s/login', label: 'Login' },

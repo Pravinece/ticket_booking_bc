@@ -491,4 +491,4 @@ export const CAMERA_POSITIONS = {
         -34.063520417436465
       ]
     }
-  }
+  } 

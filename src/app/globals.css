@@ -31,5 +31,5 @@ body {
   border-radius: 20px;
 }
 .btn{
-  @apply bg-gradient-to-r from-[#BA9EFF] to-[#8455EF] rounded-2xl text-white font-semibold py-2 px-4 transition-transform duration-300 ease-in-out hover:scale-105 text-[#DEE5FF];
+  @apply bg-gradient-to-r from-[#BA9EFF] to-[#8455EF] rounded-2xl text-white font-semibold py-2 px-4 transition-transform duration-300 ease-in-out hover:scale-105 text-[#ffffff]
 }

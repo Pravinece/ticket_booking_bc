@@ -63,7 +63,7 @@ export default function HomePage() {
         <div className='glass-card w-[40%] h-full backdrop-blur-lg flex items-center justify-center'>
           <form action={searchBuses} className='w-[90%] h-[80%] flex flex-col items-center justify-evenly'>
             <div className='text-xl font-bold text-white'> <Globe className='inline text-[#53DDFC]' /> Book Your Journey</div>
-            <div className='w-[80%]'>
+            <div className='w-[80%] text-[#53DDFC]'>
               <SearchableSelect name="source" placeholder="From" options={cities} />
             </div>
             <div className='w-[80%]'>

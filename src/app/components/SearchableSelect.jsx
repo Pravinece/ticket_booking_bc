@@ -15,7 +15,7 @@ export default function SearchableSelect({ name, placeholder, options }) {
   }, [])
 
   return (
-    <div ref={ref} className="relative w-full">
+    <div ref={ref} className="relative w-full text-[#53DDFC] ">
       <input type="hidden" name={name} value={query} />
       <input
         type="text"
@@ -23,7 +23,7 @@ export default function SearchableSelect({ name, placeholder, options }) {
         value={query}
         onChange={(e) => { setQuery(e.target.value); setOpen(true) }}
         onFocus={() => setOpen(true)}
-        className="w-full bg-transparent border border-[#53DDFC] text-white placeholder:text-gray-500 focus:outline-none rounded-2xl p-1 indent-4"
+        className="w-full bg-transparent  border border-[#53DDFC] text-white placeholder:text-[#53DDFC] focus:outline-none rounded-2xl p-1 indent-4"
         autoComplete="off"
       />
       {open && filtered.length > 0 && (

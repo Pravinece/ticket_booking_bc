@@ -11,7 +11,6 @@ export default async function LoginPage({ searchParams }) {
   async function handleLogin(formData) {
     'use server'
     const result = await loginUser(formData);
-    console.log('result: ', result);
     if (result.success) redirect('/3s');
     redirect('/3s/login?error=' + encodeURIComponent(result.error));
   }

@@ -86,7 +86,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
     {/* Success Modal */}
     {bookingStatus?.success && (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[2000]">
-        <Card className="glass p-8 text-center max-w-sm mx-4">
+        <Card className="glass p-8 text-center max-w-sm mx-4 bg-amber-50">
           <div className="text-6xl mb-4">✅</div>
           <h2 className="text-2xl font-bold mb-2">Booking Confirmed!</h2>
           <p className="text-muted-foreground mb-1">Booking ID:</p>
@@ -184,12 +184,13 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                       <span className="text-sm font-medium">Seat {passenger.seatNumber}</span>
                     </div>
                     <div className="space-y-1">
-                      <Label>Name</Label>
+                      <Label className="text-[#53DDFC]">Name</Label>
                       <Input
                         type="text"
                         value={passenger.name}
                         onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
                         placeholder="Passenger name"
+                        className="text-[#53DDFC] border-white  focus:border-white"
                       />
                     </div>
                     <div className="flex gap-4">
@@ -200,6 +201,7 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                           value={passenger.age}
                           onChange={(e) => handlePassengerChange(index, 'age', e.target.value)}
                           placeholder="Age"
+                          className="text-[#53DDFC] border-white  focus:border-white"
                         />
                       </div>
                       <div className="flex flex-col space-y-1 w-2/3">
@@ -220,12 +222,13 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <Label>Mobile</Label>
+                      <Label >Mobile</Label>
                       <Input
                         type="tel"
                         value={passenger.mobile}
                         onChange={(e) => handlePassengerChange(index, 'mobile', e.target.value)}
                         placeholder="Mobile number"
+                        className="text-[#53DDFC] border-white  focus:border-white"
                       />
                     </div>
                   </div>
@@ -248,13 +251,13 @@ function SeatsClient({ bus, seats: initialSeats, busId, date }) {
             </div>
 
             <div className="text-center text-sm text-[#DEE5FF] mt-4 w-full h-28 flex items-center justify-center border border-[#DEE5FF]/20 rounded-lg overflow-hidden">
-              <img src="/bus1.jpeg" alt="" className='w-full h-full object-cover'/>
+              <img src="/bus1.jpeg" alt="" className='w-full h-full object-cover object-[50%_40%]'/>
             </div>
             </div>
           )}
         </div>
       </div>
-    </div> : <ObjectLoader seats={seats}/>}
+    </div> : <ObjectLoader seats={seats} setViewBus={()=>{setViewBus(!viewBus)}}/>}
     </>
   )
 }
