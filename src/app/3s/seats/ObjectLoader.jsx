@@ -69,7 +69,7 @@ function ObjectLoader({seats, setViewBus}) {
         </Canvas>
       </div>
 
-      <Card className="glass-card p-6 max-w-5xl mx-auto p-6">
+      <Card className="glass-card p-6 max-w-5xl mx-auto p-6 h-20 min-h-20 overflow-y-auto">
             <div className="flex flex-wrap gap-4 justify-center">
               {seats.map(seat => {
                 const isBooked = seat.status === 'booked'

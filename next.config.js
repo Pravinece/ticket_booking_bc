@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    turbopackUseSystemTlsCerts: true
+    turbopackUseSystemTlsCerts: true,
+    basePath: '/3s'
   }
 }
 

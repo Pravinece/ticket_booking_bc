@@ -6,12 +6,15 @@ import { getCurrentUser } from './auth';
 import { redirect } from 'next/navigation';
 
 export async function getBuses(payload) {
+    const user = await getCurrentUser();
+    if (!user) redirect('/3s/login');
+  
   try {
     const { source, destination } = payload;
-    console.log('payload: ', payload);
     const filter = {};
-    if (source) filter.source = source;
-    if (destination) filter.destination = destination;
+    if (source) filter.source = source?.toLowerCase();
+    if (destination) filter.destination = destination?.toLowerCase();
+    console.log('filter: ', filter);
 
     const buses = await Bus.find(filter).lean();
     return JSON.parse(JSON.stringify(buses));

@@ -4,16 +4,13 @@ import { cn } from '@/lib/utils'
 
 export default function NavBar() {
   const pathname = usePathname()
-  let auth = document.cookie.split('; ').find(row => row.startsWith('auth'))
-
-  if(!auth){
-    redirect('/3s/login')
-  }
   const links = [
     { href: '/3s', label: 'Home' },
     { href: '/3s/login', label: 'Login' },
     { href: '/3s/register', label: 'Register' },
+    { href: '/3s/tickets', label: 'Tickets' },
   ]
+
 
   return (
     <nav className="w-full h-full flex items-center justify-between px-6 ">
